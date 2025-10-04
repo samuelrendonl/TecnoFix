@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="933.0" prefWidth="1440.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" 
+          fx:controller="Controlador.GestionDeTrabajadoresController">
+  <columnConstraints>
+    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+  </rowConstraints>
+   <children>
+      <ImageView fitHeight="933.0" fitWidth="1440.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+         <image>
+            <Image url="@../Imagenes/GestiondeTrabajadores.png" />
+         </image>
+      </ImageView>
+      <Button fx:id="btnAñadirEmpleado" mnemonicParsing="false" onAction="#AñadirEmpleado" prefHeight="294.0" prefWidth="426.0" style="-fx-cursor: hand;" styleClass="btn-transparente" stylesheets="@styles.css" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+         <GridPane.margin>
+            <Insets right="517.0" top="20.0" />
+         </GridPane.margin>
+      </Button>
+      <Button fx:id="btnEliminarEmpleado" mnemonicParsing="false" onAction="#EliminarEmpleado" prefHeight="294.0" prefWidth="426.0" style="-fx-cursor: hand;" styleClass="btn-transparente" stylesheets="@styles.css" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+         <GridPane.margin>
+            <Insets left="519.0" top="20.0" />
+         </GridPane.margin>
+      </Button>
+      <Button fx:id="btnEditarEmpleado" maxHeight="294.0" maxWidth="426.0" minHeight="294.0" minWidth="426.0" mnemonicParsing="false" onAction="#EditarEmpleado" prefHeight="294.0" prefWidth="426.0" style="-fx-cursor: hand;" styleClass="btn-transparente" stylesheets="@styles.css" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+         <GridPane.margin>
+            <Insets top="644.0" />
+         </GridPane.margin>
+      </Button>
+      <Button fx:id="btnInicio" mnemonicParsing="false" onAction="#ActionInicio" prefHeight="106.0" prefWidth="110.0" style="-fx-cursor: hand;" styleClass="btn-transparente" stylesheets="@styles.css" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+         <GridPane.margin>
+            <Insets bottom="657.0" left="1037.0" />
+         </GridPane.margin>
+      </Button>
+   </children>
+</GridPane>
