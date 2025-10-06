@@ -1,16 +1,10 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
- */
-
-
-
 package Controlador;
 
 import Modelo.ConexionBD;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -27,16 +21,20 @@ public class AgregarTrabajadorController implements Initializable {
 
     @FXML
     private TextField txtCrearNombreEmpleado;
+
     @FXML
     private TextField txtCrearUsuarioEmpleado;
+
     @FXML
     private PasswordField txtCrearConraseñaEmpleado;
+
     @FXML
     private PasswordField txtConfirmarContraseñaEmpleado;
-    
-        @FXML
+
+    @FXML
     private Button btnInicio;
-     @FXML
+
+    @FXML
     private void InicioAction(ActionEvent event) {
         Main.changeScene("InterfazAdministrador.fxml", "Panel Administrador");
     }
@@ -48,42 +46,67 @@ public class AgregarTrabajadorController implements Initializable {
         String password_hash = txtCrearConraseñaEmpleado.getText();
         String confirmar = txtConfirmarContraseñaEmpleado.getText();
 
-        
+        // Validaciones
         if (nombre.isEmpty() || usuario.isEmpty() || password_hash.isEmpty() || confirmar.isEmpty()) {
             mostrarAlerta(Alert.AlertType.WARNING, "Campos Vacíos", "Debes llenar todos los campos.");
             txtCrearNombreEmpleado.requestFocus();
             return;
         }
 
-        
         if (!password_hash.equals(confirmar)) {
             mostrarAlerta(Alert.AlertType.WARNING, "Contraseña Incorrecta", "Las contraseñas no coinciden.");
             txtCrearConraseñaEmpleado.requestFocus();
             return;
         }
 
-        
-String sql = "INSERT INTO usuarios (nombre, usuario, password_hash, rol) VALUES (?, ?, ?, ?)";
+        // Inserciones en ambas tablas
+        String sqlUsuarios = "INSERT INTO usuarios (nombre, usuario, password_hash, rol) VALUES (?, ?, ?, ?)";
+        String sqlEmpleados = "INSERT INTO empleados (nombre, usuario, password_hash, rol ) VALUES (?, ?, ?, ?)";
 
-try (Connection conn = ConexionBD.conectar();
-     PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = ConexionBD.conectar()) {
 
-    ps.setString(1, nombre);
-    ps.setString(2, usuario);
-    ps.setString(3, password_hash);
-    ps.setString(4, "empleado");
+            // Desactivamos autocommit para manejar ambas inserciones como una sola transacción
+            conn.setAutoCommit(false);
 
-    int filas = ps.executeUpdate();
+            try (PreparedStatement psUsuario = conn.prepareStatement(sqlUsuarios);
+                 PreparedStatement psEmpleado = conn.prepareStatement(sqlEmpleados)) {
 
-    if (filas > 0) {
-        mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "Usuario empleado creado correctamente.");
-       
-    }
+                // Inserción en usuarios
+                psUsuario.setString(1, nombre);
+                psUsuario.setString(2, usuario);
+                psUsuario.setString(3, password_hash);
+                psUsuario.setString(4, "empleado");
+                psUsuario.executeUpdate();
 
-} catch (Exception e) {
-    e.printStackTrace();
-    mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo crear el usuario: " + e.getMessage());
-}
+                // Inserción en empleados
+                psEmpleado.setString(1, nombre);
+                psEmpleado.setString(2, usuario);
+                psEmpleado.setString(3, password_hash);
+                psEmpleado.setString(4, "empleado");
+                psEmpleado.executeUpdate();
+
+                // Confirmar ambas inserciones
+                conn.commit();
+
+                mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", 
+                        "Empleado creado correctamente y registrado como usuario.");
+
+                // Limpieza de campos
+                txtCrearNombreEmpleado.clear();
+                txtCrearUsuarioEmpleado.clear();
+                txtCrearConraseñaEmpleado.clear();
+                txtConfirmarContraseñaEmpleado.clear();
+
+            } catch (SQLException e) {
+                conn.rollback(); // Si algo falla, se revierte todo
+                mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo crear el empleado: " + e.getMessage());
+                e.printStackTrace();
+            }
+
+        } catch (SQLException e) {
+            mostrarAlerta(Alert.AlertType.ERROR, "Error de Conexión", "No se pudo conectar a la base de datos.");
+            e.printStackTrace();
+        }
     }
 
     private void mostrarAlerta(Alert.AlertType tipo, String titulo, String mensaje) {
@@ -93,14 +116,9 @@ try (Connection conn = ConexionBD.conectar();
         alert.setContentText(mensaje);
         alert.showAndWait();
     }
-    
-    
 
-    
-    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        // No requiere inicialización adicional
     }
 }
-

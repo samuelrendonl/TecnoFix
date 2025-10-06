@@ -10,14 +10,17 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class ConexionBD {
+    private static final String URL = "jdbc:mysql://localhost:3306/tecnofix";
+    private static final String USER = "root";
+    private static final String PASSWORD = "m123456";
+
     public static Connection conectar() {
         try {
-            String url = "jdbc:mysql://localhost:3306/tecnofix";
-            String user = "root";
-            String password = "m123456";
-            return DriverManager.getConnection(url, user, password);
+            Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+            System.out.println(" Conexión exitosa a la base de datos TecnoFix.");
+            return conn;
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.err.println("Error al conectar a la base de datos: " + e.getMessage());
             return null;
         }
     }

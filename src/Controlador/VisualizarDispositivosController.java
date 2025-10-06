@@ -60,7 +60,7 @@ public class VisualizarDispositivosController implements Initializable {
      ObservableList<Dispositivo> listaDispositivos = FXCollections.observableArrayList();
      
     private void cargarDispositivos() {
-        String sql = "SELECT * FROM reparaciones";
+        String sql = "SELECT * FROM dispositivos";
 
         try (Connection conn = ConexionBD.conectar();
              PreparedStatement ps = conn.prepareStatement(sql);

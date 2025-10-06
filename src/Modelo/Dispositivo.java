@@ -1,82 +1,40 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package Modelo;
 
-/**
- *
- * @author Mi PC
- */
 public class Dispositivo {
     private int idDispositivo;
-    
-    private String NombreCliente;
-    private String NombreDispositivo;
-    private String MarcaDispositivo;
-    private String DañoDispositivo;
-    private String EmpleadoAsignado;
+    private String nombreCliente;
+    private String nombreDispositivo;
+    private String marcaDispositivo;
+    private String dañoDispositivo;
+    private String empleadoAsignado;
 
-    public Dispositivo(int idDispositivo, String NombreCliente, String NombreDispositivo, String MarcaDispositivo, String DañoDispositivo, String EmpleadoAsignado) {
+    public Dispositivo(int idDispositivo, String nombreCliente, String nombreDispositivo, String marcaDispositivo, String dañoDispositivo, String empleadoAsignado) {
         this.idDispositivo = idDispositivo;
-        this.NombreCliente = NombreCliente;
-        this.NombreDispositivo = NombreDispositivo;
-        this.MarcaDispositivo = MarcaDispositivo;
-        this.DañoDispositivo = DañoDispositivo;
-        this.EmpleadoAsignado = EmpleadoAsignado;
+        this.nombreCliente = nombreCliente;
+        this.nombreDispositivo = nombreDispositivo;
+        this.marcaDispositivo = marcaDispositivo;
+        this.dañoDispositivo = dañoDispositivo;
+        this.empleadoAsignado = empleadoAsignado;
     }
 
-    public int getIdDispositivo() {
-        return idDispositivo;
-    }
+    // Getters y setters
+    public int getIdDispositivo() { return idDispositivo; }
+    public void setIdDispositivo(int idDispositivo) { this.idDispositivo = idDispositivo; }
 
-    public void setIdDispositivo(int idDispositivo) {
-        this.idDispositivo = idDispositivo;
-    }
+    public String getNombreCliente() { return nombreCliente; }
+    public void setNombreCliente(String nombreCliente) { this.nombreCliente = nombreCliente; }
 
-    public String getNombreCliente() {
-        return NombreCliente;
-    }
+    public String getNombreDispositivo() { return nombreDispositivo; }
+    public void setNombreDispositivo(String nombreDispositivo) { this.nombreDispositivo = nombreDispositivo; }
 
-    public void setNombreCliente(String NombreCliente) {
-        this.NombreCliente = NombreCliente;
-    }
+    public String getMarcaDispositivo() { return marcaDispositivo; }
+    public void setMarcaDispositivo(String marcaDispositivo) { this.marcaDispositivo = marcaDispositivo; }
 
-    public String getNombreDispositivo() {
-        return NombreDispositivo;
-    }
+    public String getDañoDispositivo() { return dañoDispositivo; }
+    public void setDañoDispositivo(String dañoDispositivo) { this.dañoDispositivo = dañoDispositivo; }
 
-    public void setNombreDispositivo(String NombreDispositivo) {
-        this.NombreDispositivo = NombreDispositivo;
-    }
-
-    public String getMarcaDispositivo() {
-        return MarcaDispositivo;
-    }
-
-    public void setMarcaDispositivo(String MarcaDispositivo) {
-        this.MarcaDispositivo = MarcaDispositivo;
-    }
-
-    public String getDañoDispositivo() {
-        return DañoDispositivo;
-    }
-
-    public void setDañoDispositivo(String DañoDispositivo) {
-        this.DañoDispositivo = DañoDispositivo;
-    }
-
-    public String getEmpleadoAsignado() {
-        return EmpleadoAsignado;
-    }
-
-    public void setEmpleadoAsignado(String EmpleadoAsignado) {
-        this.EmpleadoAsignado = EmpleadoAsignado;
-    }
-
+    public String getEmpleadoAsignado() { return empleadoAsignado; }
+    public void setEmpleadoAsignado(String empleadoAsignado) { this.empleadoAsignado = empleadoAsignado; 
     
-
-}
-
-
-
+    }}

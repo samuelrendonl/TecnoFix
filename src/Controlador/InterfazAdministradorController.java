@@ -26,7 +26,7 @@ public class InterfazAdministradorController implements Initializable {
 
     @FXML
     private void ActionReparaciones(ActionEvent event) {
-        
+     Main.changeScene("GestionDeReparaciones.fxml", "Gestor De Piezas");   
     }
 
     @FXML

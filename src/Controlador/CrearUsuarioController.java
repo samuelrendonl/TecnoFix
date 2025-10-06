@@ -1,16 +1,10 @@
-
-
-/**
- * FXML Controller class
- *
- * @author Mi PC
- */
 package Controlador;
 
 import Modelo.ConexionBD;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -24,61 +18,81 @@ public class CrearUsuarioController implements Initializable {
 
     @FXML
     private Button btnCrearCuenta;
-        private Button VolverInicio;
+
+    @FXML
+    private Button VolverInicio;
+
     @FXML
     private TextField txtCrearNombre;
+
     @FXML
     private TextField txtCrearUsuario;
+
     @FXML
-    private PasswordField txtCrearConraseña;
+    private PasswordField txtCrearContraseña;
+
     @FXML
     private PasswordField txtConfirmarContraseña;
     
+
+
     @FXML
-    private void ActionCrearCuenta(ActionEvent event) {
+    private void ActionCrearCuenta(ActionEvent event) throws SQLException {
         String nombre = txtCrearNombre.getText();
         String usuario = txtCrearUsuario.getText();
-        String password_hash = txtCrearConraseña.getText();
+        String password_hash = txtCrearContraseña.getText();
         String confirmar = txtConfirmarContraseña.getText();
 
-        
         if (nombre.isEmpty() || usuario.isEmpty() || password_hash.isEmpty() || confirmar.isEmpty()) {
             mostrarAlerta(Alert.AlertType.WARNING, "Campos Vacíos", "Debes llenar todos los campos.");
             txtCrearNombre.requestFocus();
             return;
         }
 
-        
         if (!password_hash.equals(confirmar)) {
             mostrarAlerta(Alert.AlertType.WARNING, "Contraseña Incorrecta", "Las contraseñas no coinciden.");
-            txtCrearConraseña.requestFocus();
+            txtCrearNombre.requestFocus();
             return;
         }
 
+         String sqlUsuarios = "INSERT INTO usuarios (nombre, usuario, password_hash, rol) VALUES (?, ?, ?, ?)";
+        String sqlAdmin = "INSERT INTO empleados (nombre, usuario, password_hash, rol ) VALUES (?, ?, ?, ?)";    
         
-String sql = "INSERT INTO usuarios (nombre, usuario, password_hash, rol) VALUES (?, ?, ?, ?)";
+        
+              try (Connection conn = ConexionBD.conectar()) {
 
-try (Connection conn = ConexionBD.conectar();
-     PreparedStatement ps = conn.prepareStatement(sql)) {
+            // Desactivamos autocommit para manejar ambas inserciones como una sola transacción
+            conn.setAutoCommit(false);
 
-    ps.setString(1, nombre);
-    ps.setString(2, usuario);
-    ps.setString(3, password_hash);
-    ps.setString(4, "admin");
+            try (PreparedStatement psUsuario = conn.prepareStatement(sqlUsuarios);
+                 PreparedStatement psAdmin = conn.prepareStatement(sqlAdmin)) {
 
-    int filas = ps.executeUpdate();
+                // Inserción en usuarios
+                psUsuario.setString(1, nombre);
+                psUsuario.setString(2, usuario);
+                psUsuario.setString(3, password_hash);
+                psUsuario.setString(4, "empleado");
+                psUsuario.executeUpdate();
 
-    if (filas > 0) {
-        mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "Usuario administrador creado correctamente.");
-        Main.changeScene("Login.fxml", "Iniciar Sesión");
+                // Inserción en empleados
+                psAdmin.setString(1, nombre);
+                psAdmin.setString(2, usuario);
+                psAdmin.setString(3, password_hash);
+                psAdmin.setString(4, "empleado");
+             conn.commit();
+
+    
+                mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "Usuario creado correctamente.");
+                Main.changeScene("Login.fxml", "Iniciar Sesión");
+            
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo crear el usuario: " + e.getMessage());
+        }
     }
 
-} catch (Exception e) {
-    e.printStackTrace();
-    mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo crear el usuario: " + e.getMessage());
-}
     }
-
     private void mostrarAlerta(Alert.AlertType tipo, String titulo, String mensaje) {
         Alert alert = new Alert(tipo);
         alert.setTitle(titulo);
@@ -87,18 +101,25 @@ try (Connection conn = ConexionBD.conectar();
         alert.showAndWait();
     }
 
-    
-    
-    private void VolverInicio(ActionEvent event){
-    Main.changeScene("Login.fxml", "Iniciar Sesión");
+    @FXML
+    private void VolverInicio(ActionEvent event) {
+        txtCrearNombre.clear();
+        txtCrearUsuario.clear();
+        txtCrearContraseña.clear();
+        txtConfirmarContraseña.clear();
+        Main.changeScene("Login.fxml", "Iniciar Sesión");
+    }
+        @Override
+    public void initialize(URL url, ResourceBundle rb) {
         
     }
     
-        @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-    }
     
 }
+
+
+
+
+    
 
 
