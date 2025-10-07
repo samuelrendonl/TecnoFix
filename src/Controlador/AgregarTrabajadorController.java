@@ -1,6 +1,7 @@
 package Controlador;
 
 import Modelo.ConexionBD;
+import Modelo.Empleado;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -34,6 +35,9 @@ public class AgregarTrabajadorController implements Initializable {
     @FXML
     private Button btnInicio;
 
+    private boolean modoEdicion = false;
+    private int idEmpleadoEditar;
+
     @FXML
     private void InicioAction(ActionEvent event) {
         Main.changeScene("InterfazAdministrador.fxml", "Panel Administrador");
@@ -59,54 +63,85 @@ public class AgregarTrabajadorController implements Initializable {
             return;
         }
 
-        // Inserciones en ambas tablas
-        String sqlUsuarios = "INSERT INTO usuarios (nombre, usuario, password_hash, rol) VALUES (?, ?, ?, ?)";
-        String sqlEmpleados = "INSERT INTO empleados (nombre, usuario, password_hash, rol ) VALUES (?, ?, ?, ?)";
-
         try (Connection conn = ConexionBD.conectar()) {
+            if (modoEdicion) {
+                // 🔹 MODO EDICIÓN → Actualizar empleado existente
+                String sqlUpdate = "UPDATE empleados SET nombre = ?, usuario = ?, password_hash = ? WHERE id_empleado = ?";
+                try (PreparedStatement ps = conn.prepareStatement(sqlUpdate)) {
+                    ps.setString(1, nombre);
+                    ps.setString(2, usuario);
+                    ps.setString(3, password_hash);
+                    ps.setInt(4, idEmpleadoEditar);
 
-            // Desactivamos autocommit para manejar ambas inserciones como una sola transacción
-            conn.setAutoCommit(false);
+                    int filas = ps.executeUpdate();
 
-            try (PreparedStatement psUsuario = conn.prepareStatement(sqlUsuarios);
-                 PreparedStatement psEmpleado = conn.prepareStatement(sqlEmpleados)) {
+                    if (filas > 0) {
+                        mostrarAlerta(Alert.AlertType.INFORMATION, "Actualizado", "Empleado actualizado correctamente.");
+                        limpiarCampos();
+                    } else {
+                        mostrarAlerta(Alert.AlertType.WARNING, "Error", "No se encontró el empleado a actualizar.");
+                    }
+                }
+            } else {
+                
+                String sqlUsuarios = "INSERT INTO usuarios (nombre, usuario, password_hash, rol) VALUES (?, ?, ?, ?)";
+                String sqlEmpleados = "INSERT INTO empleados (nombre, usuario, password_hash, rol ) VALUES (?, ?, ?, ?)";
 
-                // Inserción en usuarios
-                psUsuario.setString(1, nombre);
-                psUsuario.setString(2, usuario);
-                psUsuario.setString(3, password_hash);
-                psUsuario.setString(4, "empleado");
-                psUsuario.executeUpdate();
+                conn.setAutoCommit(false);
 
-                // Inserción en empleados
-                psEmpleado.setString(1, nombre);
-                psEmpleado.setString(2, usuario);
-                psEmpleado.setString(3, password_hash);
-                psEmpleado.setString(4, "empleado");
-                psEmpleado.executeUpdate();
+                try (PreparedStatement psUsuario = conn.prepareStatement(sqlUsuarios);
+                     PreparedStatement psEmpleado = conn.prepareStatement(sqlEmpleados)) {
 
-                // Confirmar ambas inserciones
-                conn.commit();
+                    psUsuario.setString(1, nombre);
+                    psUsuario.setString(2, usuario);
+                    psUsuario.setString(3, password_hash);
+                    psUsuario.setString(4, "empleado");
+                    psUsuario.executeUpdate();
 
-                mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", 
-                        "Empleado creado correctamente y registrado como usuario.");
+                    psEmpleado.setString(1, nombre);
+                    psEmpleado.setString(2, usuario);
+                    psEmpleado.setString(3, password_hash);
+                    psEmpleado.setString(4, "empleado");
+                    psEmpleado.executeUpdate();
 
-                // Limpieza de campos
-                txtCrearNombreEmpleado.clear();
-                txtCrearUsuarioEmpleado.clear();
-                txtCrearConraseñaEmpleado.clear();
-                txtConfirmarContraseñaEmpleado.clear();
+                    conn.commit();
 
-            } catch (SQLException e) {
-                conn.rollback(); // Si algo falla, se revierte todo
-                mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo crear el empleado: " + e.getMessage());
-                e.printStackTrace();
+                    mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito",
+                            "Empleado creado correctamente y registrado como usuario.");
+
+                    limpiarCampos();
+
+                } catch (SQLException e) {
+                    conn.rollback();
+                    mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo crear el empleado: " + e.getMessage());
+                    e.printStackTrace();
+                }
             }
 
         } catch (SQLException e) {
             mostrarAlerta(Alert.AlertType.ERROR, "Error de Conexión", "No se pudo conectar a la base de datos.");
             e.printStackTrace();
         }
+    }
+
+    // 🔸 Método para recibir datos del empleado desde Editar
+    public void setModoEdicion(Empleado empleado) {
+        this.modoEdicion = true;
+        this.idEmpleadoEditar = empleado.getIdEmpleado();
+
+        txtCrearNombreEmpleado.setText(empleado.getNombre());
+        txtCrearUsuarioEmpleado.setText(empleado.getUsuario());
+
+        // Si deseas ocultar los campos de contraseña en edición:
+        txtCrearConraseñaEmpleado.setPromptText("Nueva contraseña");
+        txtConfirmarContraseñaEmpleado.setPromptText("Confirmar contraseña");
+    }
+
+    private void limpiarCampos() {
+        txtCrearNombreEmpleado.clear();
+        txtCrearUsuarioEmpleado.clear();
+        txtCrearConraseñaEmpleado.clear();
+        txtConfirmarContraseñaEmpleado.clear();
     }
 
     private void mostrarAlerta(Alert.AlertType tipo, String titulo, String mensaje) {
@@ -119,6 +154,7 @@ public class AgregarTrabajadorController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // No requiere inicialización adicional
+
+
     }
 }

@@ -143,20 +143,22 @@ public class AgregarDispositivoController implements Initializable {
 
             if (idDispositivoEdicion == null) {
                 // INSERTAR nuevo dispositivo
-                String sqlDispositivo = "INSERT INTO dispositivos (NombreCliente, NombreDispositivo, MarcaDispositivo, DañoDispositivo, FotoDispositivo) VALUES (?, ?, ?, ?, ?)";
-                PreparedStatement psDispositivo = conn.prepareStatement(sqlDispositivo, Statement.RETURN_GENERATED_KEYS);
+                String sqlDispositivo = "INSERT INTO dispositivos (NombreCliente, NombreDispositivo, MarcaDispositivo, DañoDispositivo, EmpleadoAsignado, FotoDispositivo) VALUES (?, ?, ?, ?, ?, ?)";
+PreparedStatement psDispositivo = conn.prepareStatement(sqlDispositivo, Statement.RETURN_GENERATED_KEYS);
 
-                psDispositivo.setString(1, cliente);
-                psDispositivo.setString(2, nombreDispositivo);
-                psDispositivo.setString(3, marca);
-                psDispositivo.setString(4, daño);
+psDispositivo.setString(1, cliente);
+psDispositivo.setString(2, nombreDispositivo);
+psDispositivo.setString(3, marca);
+psDispositivo.setString(4, daño);
+psDispositivo.setString(5, empleadoSeleccionado);
 
-                if (imagenSeleccionada != null) {
-                    FileInputStream fis = new FileInputStream(imagenSeleccionada);
-                    psDispositivo.setBinaryStream(5, fis, (int) imagenSeleccionada.length());
-                } else {
-                    psDispositivo.setNull(5, java.sql.Types.BLOB);
-                }
+if (imagenSeleccionada != null) {
+    FileInputStream fis = new FileInputStream(imagenSeleccionada);
+    psDispositivo.setBinaryStream(6, fis, (int) imagenSeleccionada.length());
+} else {
+    psDispositivo.setNull(6, java.sql.Types.BLOB);
+}
+
 
                 psDispositivo.executeUpdate();
 

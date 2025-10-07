@@ -37,7 +37,7 @@ public class DispositivosController implements Initializable {
     private Button EliminarDispositivo;
      @FXML
     private void EliminarDispositivoAction(ActionEvent event) {
-        Main.changeScene("EliminarDispositivo.fxml", "Eliminar Dispositivo");
+        Main.changeScene("EliminarDispositivos.fxml", "Eliminar Dispositivo");
     }  
     
     

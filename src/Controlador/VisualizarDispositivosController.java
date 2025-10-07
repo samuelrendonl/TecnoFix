@@ -69,14 +69,16 @@ public class VisualizarDispositivosController implements Initializable {
             listaDispositivos.clear();
 
             while (rs.next()) {
-                listaDispositivos.add(new Dispositivo(
-                 rs.getInt("idDispositivo"),
-                 rs.getString("NombreCliente"),
-                 rs.getString("NombreDispositivo"),
-                 rs.getString("MarcaDispositivo"),
-                 rs.getString("DañoDispositivo"),
-                 rs.getString("EmpleadoAsignado") 
-));
+                Dispositivo disp = new Dispositivo(
+             rs.getInt("id_dispositivo"),
+                rs.getString("NombreCliente"),
+                rs.getString("NombreDispositivo"),
+                rs.getString("MarcaDispositivo"),
+                rs.getString("DañoDispositivo"),
+                rs.getString("EmpleadoAsignado")
+    );
+    listaDispositivos.add(disp);
+
             }
 
             
