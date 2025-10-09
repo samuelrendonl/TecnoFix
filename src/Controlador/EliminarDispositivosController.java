@@ -23,7 +23,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 public class EliminarDispositivosController implements Initializable {
 
     @FXML
-    private Button btnInicio, btnElimarDispositivo;
+    private Button btnInicio, btnElimarDispositivo, btnvolver;
     @FXML
     private TableView<Dispositivo> tableDispositivos;
     @FXML
@@ -137,4 +137,11 @@ private void cargarDispositivos() {
         alerta.setContentText(mensaje);
         alerta.showAndWait();
     }
+    
+    
+            @FXML
+    private void volverAction(ActionEvent event){
+      Main.changeScene("Dispositivos.fxml", "Dispositivos");  
+    }
+
 }

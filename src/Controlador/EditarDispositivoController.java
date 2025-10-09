@@ -15,7 +15,7 @@ import javafx.stage.Stage;
 public class EditarDispositivoController implements Initializable {
 
     @FXML
-    private Button btnInicio, btnEditarDispositivo;
+    private Button btnInicio, btnEditarDispositivo, btnvolver;
     @FXML
     private TableView<Dispositivo> tableDispositivos;
     @FXML
@@ -105,4 +105,12 @@ public class EditarDispositivoController implements Initializable {
             new Alert(Alert.AlertType.ERROR, "Error al abrir el formulario de edición: " + e.getMessage()).showAndWait();
         }
     }
+    
+    
+        @FXML
+    private void volverAction(ActionEvent event){
+      Main.changeScene("Dispositivos.fxml", "Dispositivos");  
+    }
+
+    
 }

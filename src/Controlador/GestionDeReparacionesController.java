@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
- */
 package Controlador;
 
 import java.net.URL;
@@ -11,15 +7,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 
-/**
- * FXML Controller class
- *
- * @author Mi PC
- */
 public class GestionDeReparacionesController implements Initializable {
 
 @FXML
-private Button ReparacionesCompletadas, EliminarReparacion, EditarReparaciones, btnInicio;
+private Button ReparacionesCompletadas, EliminarReparacion, EditarReparaciones, btnInicio, btnVisualizarReparaciones;
 
 @FXML
 private void ReparacionesCompletadasAction(ActionEvent event){
@@ -32,18 +23,21 @@ private void EliminarReparacionAction(ActionEvent event){
 }
 
 @FXML
-private void EditarReparacionesAction(ActionEvent event){
- Main.changeScene("EditarReparaciones.fxml", "Editar Reparaciones");       
-}
-
-@FXML
 private void InicioAction(ActionEvent event){
   Main.changeScene("InterfazAdministrador.fxml", "Panel Administrador");      
 }
 
+
+@FXML
+private void VisualizarReparacionesAtcion(ActionEvent event){
+  Main.changeScene("VisualizarReparaciones.fxml", "Reparaciones");      
+}
+
+
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+       
     }    
     
 }

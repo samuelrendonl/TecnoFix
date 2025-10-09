@@ -22,7 +22,7 @@ public class EliminarEmpleadoController {
     @FXML
     private TableColumn<Empleado, String> colRol;
     @FXML
-    private Button btnEliminar,btnInicio;
+    private Button btnEliminar,btnInicio, btnvolver;
 
     private ObservableList<Empleado> listaEmpleados = FXCollections.observableArrayList();
 
@@ -121,6 +121,11 @@ public class EliminarEmpleadoController {
         }
     }
 
+        @FXML
+    private void volverAction(ActionEvent event){
+      Main.changeScene("GestionDeTrabajadores.fxml", "Gestor De Trabajadores");  
+    }
+    
     private void mostrarAlerta(Alert.AlertType tipo, String titulo, String contenido) {
         Alert alerta = new Alert(tipo);
         alerta.setTitle(titulo);

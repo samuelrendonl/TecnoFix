@@ -29,12 +29,12 @@ import javafx.scene.layout.BorderPane;
  */
 public class VisualizarDispositivosController implements Initializable {
         @FXML
-    private Button btnInicio;
+    private Button btnInicio, btnvolver;
     @FXML
     private void InicioAction(ActionEvent event) {
         
     if ("admin".equals(Main.tipoUsuario)) {
-        Main.changeScene("Dispositivos.fxml", "Administrador de Dispositivos");
+        Main.changeScene("InterfazAdministrador.fxml", "Panel Administrador");
     } else if ("empleado".equals(Main.tipoUsuario)) {
         Main.changeScene("InterfazEmpleado.fxml", "Panel Empleado");
     }
@@ -113,5 +113,11 @@ public void initialize(URL url, ResourceBundle rb) {
     // 🔹 Cargar datos desde la BD
     cargarDispositivos();
 }
+
+        @FXML
+    private void volverAction(ActionEvent event){
+      Main.changeScene("Dispositivos.fxml", "Dispositivos");  
+    }
+
 
 }

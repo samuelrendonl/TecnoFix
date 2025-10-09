@@ -10,8 +10,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="933.0" prefWidth="1440.0" style="-fx-background-color: #ffffff;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/24.0.1"
-fx:controller="Controlador.EditarDispositivoController">
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="933.0" prefWidth="1440.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controlador.EditarDispositivoController">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
   </columnConstraints>
@@ -45,6 +44,11 @@ fx:controller="Controlador.EditarDispositivoController">
       <Button fx:id="btnEditarDispositivos" maxHeight="71.0" maxWidth="230.0" minHeight="71.0" minWidth="230.0" mnemonicParsing="false" onAction="#EditarDispositivosAction" prefHeight="71.0" prefWidth="230.0" style="-fx-cursor: hand;" styleClass="btn-transparente" stylesheets="@styles.css" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
          <GridPane.margin>
             <Insets left="994.0" top="784.0" />
+         </GridPane.margin>
+      </Button>
+      <Button fx:id="btnvolver" mnemonicParsing="false" onAction="#volverAction" prefHeight="50.0" prefWidth="50.0" style="-fx-cursor: hand;" styleClass="btn-transparente" stylesheets="@styles.css" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+         <GridPane.margin>
+            <Insets right="1187.0" top="784.0" />
          </GridPane.margin>
       </Button>
    </children>

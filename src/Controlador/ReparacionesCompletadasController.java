@@ -21,6 +21,10 @@ public class ReparacionesCompletadasController implements Initializable {
     private void InicioAction(ActionEvent event) {
         Main.changeScene("InterfazAdministrador.fxml", "Panel Administrador");
     }
+            @FXML
+    private void volverAction(ActionEvent event){
+      Main.changeScene("GestionDeReparaciones.fxml", "Gestor de Reparaciones");  
+    }
     
     
     @Override

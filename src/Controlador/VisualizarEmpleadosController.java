@@ -1,5 +1,8 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
+ */
 package Controlador;
-
 import Modelo.ConexionBD;
 import Modelo.Empleado;
 import java.net.URL;
@@ -10,20 +13,23 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.stage.Stage;
+import javafx.event.ActionEvent;
+import javafx.scene.control.Button;
 
-public class EditarEmpleadoController implements Initializable {
-
+/**
+ * FXML Controller class
+ *
+ * @author Mi PC
+ */
+public class VisualizarEmpleadosController implements Initializable {
+    @FXML
+    private Button btnInicio, btnvolver;
     @FXML
     private TableView<Empleado> tablaEmpleados;
     @FXML
@@ -34,53 +40,18 @@ public class EditarEmpleadoController implements Initializable {
     private TableColumn<Empleado, String> colUsuario;
     @FXML
     private TableColumn<Empleado, String> colRol;
-    @FXML
-    private Button btnEditarEmpleado;
-    @FXML
-    private Button btnInicio, btnvolver;
-
     private ObservableList<Empleado> listaEmpleados = FXCollections.observableArrayList();
 
+    @FXML
+    private void volverAction(ActionEvent event){
+      Main.changeScene("GestionDeTrabajadores.fxml", "Gestor De Trabajadores");  
+    }
     @FXML
     private void InicioAction(ActionEvent event) {
         Main.changeScene("InterfazAdministrador.fxml", "Panel Administrador");
     }
-
-    @FXML
-    private void EditarEmpleadoAction(ActionEvent event) {
-        Empleado empleadoSeleccionado = tablaEmpleados.getSelectionModel().getSelectedItem();
-
-        if (empleadoSeleccionado == null) {
-            mostrarAlerta(Alert.AlertType.WARNING, "Selección requerida", "Por favor selecciona un empleado para editar.");
-            return;
-        }
-
-        try {
-            
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Vista/AgregarTrabajador.fxml"));
-            Scene scene = new Scene(loader.load());
-
-            
-            AgregarTrabajadorController controller = loader.getController();
-            controller.setModoEdicion(empleadoSeleccionado);
-
-            
-            Stage stage = new Stage();
-            stage.setScene(scene);
-            stage.setTitle("Editar Empleado");
-            stage.show();
-
-            
-            Stage actual = (Stage) btnEditarEmpleado.getScene().getWindow();
-            actual.close();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo abrir la ventana de edición: " + e.getMessage());
-        }
-    }
-
-    @Override
+    
+     @Override
     public void initialize(URL url, ResourceBundle rb) {
         configurarColumnas();
         cargarEmpleados();
@@ -95,7 +66,6 @@ public class EditarEmpleadoController implements Initializable {
 
     private void cargarEmpleados() {
         listaEmpleados.clear();
-
         String sql = "SELECT id_empleado, nombre, usuario, rol FROM empleados";
 
         try (Connection conn = ConexionBD.conectar();
@@ -116,16 +86,13 @@ public class EditarEmpleadoController implements Initializable {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            mostrarAlerta(Alert.AlertType.ERROR, "Error al cargar", "No se pudieron cargar los empleados: " + e.getMessage());
+            mostrarAlerta(Alert.AlertType.ERROR, "Error al cargar", 
+                    "No se pudieron cargar los empleados: " + e.getMessage());
         }
     }
 
-        @FXML
-    private void volverAction(ActionEvent event){
-      Main.changeScene("GestionDeTrabajadores.fxml", "Gestor De Trabajadores");  
-    }
     
-    private void mostrarAlerta(Alert.AlertType tipo, String titulo, String mensaje) {
+        private void mostrarAlerta(Alert.AlertType tipo, String titulo, String mensaje) {
         Alert alert = new Alert(tipo);
         alert.setTitle(titulo);
         alert.setHeaderText(null);
@@ -133,3 +100,4 @@ public class EditarEmpleadoController implements Initializable {
         alert.showAndWait();
     }
 }
+

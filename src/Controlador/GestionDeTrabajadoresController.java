@@ -33,6 +33,8 @@ public class GestionDeTrabajadoresController implements Initializable {
     
     @FXML
     private Button btnInicio;
+     @FXML
+    private Button btnVisualizarEmpleados;
     
     
     @FXML
@@ -52,6 +54,13 @@ public class GestionDeTrabajadoresController implements Initializable {
     private void EditarEmpleado(ActionEvent event){
        Main.changeScene("EditarEmpleado.fxml", "Editar Empleado"); 
     }
+    
+            @FXML
+    private void VisualizarEmpleadosAction(ActionEvent event){
+       Main.changeScene("VisualizarEmpleados.fxml", "Visualizar Empleados"); 
+    }
+    
+    
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {

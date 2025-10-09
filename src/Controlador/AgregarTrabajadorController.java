@@ -33,7 +33,7 @@ public class AgregarTrabajadorController implements Initializable {
     private PasswordField txtConfirmarContraseñaEmpleado;
 
     @FXML
-    private Button btnInicio;
+    private Button btnInicio, btnvolver;
 
     private boolean modoEdicion = false;
     private int idEmpleadoEditar;
@@ -150,6 +150,11 @@ public class AgregarTrabajadorController implements Initializable {
         alert.setHeaderText(null);
         alert.setContentText(mensaje);
         alert.showAndWait();
+    }
+    
+    @FXML
+    private void volverAction(ActionEvent event){
+      Main.changeScene("GestionDeTrabajadores.fxml", "Gestor De Trabajadores");  
     }
 
     @Override
