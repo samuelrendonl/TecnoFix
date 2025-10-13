@@ -95,4 +95,7 @@ public class Reparacion {
                 ", nombreEmpleado='" + nombreEmpleado + '\'' +
                 '}';
     }
+    
+    
+    
 }

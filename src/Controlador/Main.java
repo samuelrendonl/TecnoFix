@@ -24,15 +24,31 @@ public class Main extends Application {
         primaryStage.show();
     }
 
-    public static void changeScene(String fxml, String title) {
-        try {
-            Parent pane = FXMLLoader.load(Main.class.getResource("/Vista/" + fxml));
+public static Object changeScene(String fxml, String title) {
+    try {
+        FXMLLoader loader = new FXMLLoader(Main.class.getResource("/Vista/" + fxml));
+        Parent pane = loader.load();
+
+        // Si el Stage ya tiene una escena, solo cambiamos el root sin recrear ni minimizar la ventana
+        if (primaryStage.getScene() != null) {
             primaryStage.getScene().setRoot(pane);
-            primaryStage.setTitle(title);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } else {
+            Scene scene = new Scene(pane);
+            primaryStage.setScene(scene);
         }
+
+        primaryStage.setTitle(title);
+        primaryStage.show();
+
+        // Retorna el controlador para poder pasarle datos
+        return loader.getController();
+
+    } catch (Exception e) {
+        e.printStackTrace();
+        return null;
     }
+}
+
 
     public static void main(String[] args) {
         launch(args);

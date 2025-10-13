@@ -30,7 +30,7 @@ public class GestionDePiezasController implements Initializable {
     private Button AñadirPieza;
      @FXML
     private void AñadirPiezaAction(ActionEvent event) {
-        Main.changeScene("AñadirPieza.fxml", "Añadir Pieza");
+        Main.changeScene("AgregarPieza.fxml", "Añadir Pieza");
     }
     
     @FXML

@@ -46,39 +46,33 @@ public class EditarEmpleadoController implements Initializable {
         Main.changeScene("InterfazAdministrador.fxml", "Panel Administrador");
     }
 
-    @FXML
-    private void EditarEmpleadoAction(ActionEvent event) {
-        Empleado empleadoSeleccionado = tablaEmpleados.getSelectionModel().getSelectedItem();
+@FXML
+private void EditarEmpleadoAction(ActionEvent event) {
+    Empleado empleadoSeleccionado = tablaEmpleados.getSelectionModel().getSelectedItem();
 
-        if (empleadoSeleccionado == null) {
-            mostrarAlerta(Alert.AlertType.WARNING, "Selección requerida", "Por favor selecciona un empleado para editar.");
-            return;
-        }
-
-        try {
-            
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Vista/AgregarTrabajador.fxml"));
-            Scene scene = new Scene(loader.load());
-
-            
-            AgregarTrabajadorController controller = loader.getController();
-            controller.setModoEdicion(empleadoSeleccionado);
-
-            
-            Stage stage = new Stage();
-            stage.setScene(scene);
-            stage.setTitle("Editar Empleado");
-            stage.show();
-
-            
-            Stage actual = (Stage) btnEditarEmpleado.getScene().getWindow();
-            actual.close();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo abrir la ventana de edición: " + e.getMessage());
-        }
+    if (empleadoSeleccionado == null) {
+        mostrarAlerta(Alert.AlertType.WARNING, "Selección requerida", "Por favor selecciona un empleado para editar.");
+        return;
     }
+
+    try {
+        // Cambia la escena y recibe el controlador del nuevo FXML
+        AgregarTrabajadorController controller = 
+            (AgregarTrabajadorController) Main.changeScene("AgregarTrabajador.fxml", "Editar Empleado");
+
+        // Pasa el empleado seleccionado al nuevo controlador
+        if (controller != null) {
+            controller.setModoEdicion(empleadoSeleccionado);
+        }
+
+    } catch (Exception e) {
+        e.printStackTrace();
+        mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo abrir la ventana de edición: " + e.getMessage());
+    }
+}
+
+
+
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {

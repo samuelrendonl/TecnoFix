@@ -51,7 +51,7 @@ public class VisualizarReparacionesController implements Initializable {
     private void configurarColumnas() {
         colIdReparacion.setCellValueFactory(new PropertyValueFactory<>("idReparacion"));
         colFechaRecepcion.setCellValueFactory(new PropertyValueFactory<>("fechaRecepcion"));
-        colDescripcion.setCellValueFactory(new PropertyValueFactory<>("descripcionProblema"));
+        colDescripcion.setCellValueFactory(new PropertyValueFactory<>("descripcion"));
         colEstado.setCellValueFactory(new PropertyValueFactory<>("estado"));
         colNombreCliente.setCellValueFactory(new PropertyValueFactory<>("nombreCliente"));
         colNombreDispositivo.setCellValueFactory(new PropertyValueFactory<>("nombreDispositivo"));

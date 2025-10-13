@@ -85,26 +85,31 @@ public class EditarDispositivoController implements Initializable {
         Main.changeScene("InterfazAdministrador.fxml", "Panel Administrador");
     }
 
-    @FXML
-    private void EditarDispositivosAction(ActionEvent event) {
-        Dispositivo seleccionado = tableDispositivos.getSelectionModel().getSelectedItem();
-        if (seleccionado == null) {
-            new Alert(Alert.AlertType.WARNING, "Selecciona un dispositivo para editar.").showAndWait();
-            return;
+@FXML
+private void EditarDispositivosAction(ActionEvent event) {
+    Dispositivo seleccionado = tableDispositivos.getSelectionModel().getSelectedItem();
+
+    if (seleccionado == null) {
+        new Alert(Alert.AlertType.WARNING, "Selecciona un dispositivo para editar.").showAndWait();
+        return;
+    }
+
+    try {
+        // Cambia de escena y obtiene el controlador del nuevo FXML
+        AgregarDispositivoController controller =
+            (AgregarDispositivoController) Main.changeScene("AgregarDispositivo.fxml", "Editar Dispositivo");
+
+        // Pasa el dispositivo seleccionado al nuevo controlador
+        if (controller != null) {
+            controller.setDispositivoParaEditar(seleccionado);
         }
 
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Vista/AgregarDispositivo.fxml"));
-            Stage stage = (Stage) tableDispositivos.getScene().getWindow();
-            stage.setScene(new javafx.scene.Scene(loader.load()));
-            AgregarDispositivoController controller = loader.getController();
-            controller.setDispositivoParaEditar(seleccionado);
-            stage.setTitle("Editar Dispositivo");
-        } catch (Exception e) {
-            e.printStackTrace();
-            new Alert(Alert.AlertType.ERROR, "Error al abrir el formulario de edición: " + e.getMessage()).showAndWait();
-        }
+    } catch (Exception e) {
+        e.printStackTrace();
+        new Alert(Alert.AlertType.ERROR, "Error al abrir el formulario de edición: " + e.getMessage()).showAndWait();
     }
+}
+
     
     
         @FXML
