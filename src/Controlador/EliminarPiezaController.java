@@ -93,7 +93,6 @@ public class EliminarPiezaController implements Initializable {
         }
     }
 
-    // 🔹 Método auxiliar para mostrar alertas
     private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
         Alert alerta = new Alert(tipo);
         alerta.setTitle(titulo);
@@ -102,7 +101,6 @@ public class EliminarPiezaController implements Initializable {
         alerta.showAndWait();
     }
 
-    // 🔹 Cargar piezas desde la base de datos
     private void cargarPiezas() {
         listaPiezas.clear();
         try (Connection conn = ConexionBD.conectar()) {

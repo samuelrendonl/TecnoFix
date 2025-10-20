@@ -57,33 +57,50 @@ public class EliminarDispositivosController implements Initializable {
     }
 
 private void cargarDispositivos() {
-    listaDispositivos.clear();
-    String sql = "SELECT id_dispositivo, NombreCliente, NombreDispositivo, MarcaDispositivo, DañoDispositivo, EmpleadoAsignado "
-               + "FROM dispositivos";
+    String sql = """
+        SELECT d.id_dispositivo,
+               d.NombreCliente,
+               d.NombreDispositivo,
+               d.MarcaDispositivo,
+               d.DañoDispositivo,
+               COALESCE(e.nombre, 'Sin asignar') AS EmpleadoAsignado
+        FROM dispositivos d
+        LEFT JOIN reparaciones r ON d.id_dispositivo = r.id_dispositivo
+        LEFT JOIN empleados e ON r.id_empleado = e.id_empleado;
+    """;
 
     try (Connection conn = ConexionBD.conectar();
-         PreparedStatement stmt = conn.prepareStatement(sql);
-         ResultSet rs = stmt.executeQuery()) {
+         PreparedStatement ps = conn.prepareStatement(sql);
+         ResultSet rs = ps.executeQuery()) {
+
+        listaDispositivos.clear();
 
         while (rs.next()) {
-            Dispositivo d = new Dispositivo(
-                    rs.getInt("id_dispositivo"),
-                    rs.getString("NombreCliente"),
-                    rs.getString("NombreDispositivo"),
-                    rs.getString("MarcaDispositivo"),
-                    rs.getString("DañoDispositivo"),
-                    rs.getString("EmpleadoAsignado")
+            Dispositivo disp = new Dispositivo(
+                rs.getInt("id_dispositivo"),
+                rs.getString("NombreCliente"),
+                rs.getString("NombreDispositivo"),
+                rs.getString("MarcaDispositivo"),
+                rs.getString("DañoDispositivo"),
+                rs.getString("EmpleadoAsignado")
             );
-            listaDispositivos.add(d);
+            listaDispositivos.add(disp);
         }
+
+        colId.setCellValueFactory(new PropertyValueFactory<>("idDispositivo"));
+        colNombreCliente.setCellValueFactory(new PropertyValueFactory<>("nombreCliente"));
+        colNombreDispositivo.setCellValueFactory(new PropertyValueFactory<>("nombreDispositivo"));
+        colMarcaDispositivo.setCellValueFactory(new PropertyValueFactory<>("marcaDispositivo"));
+        colDañoDispositivo.setCellValueFactory(new PropertyValueFactory<>("dañoDispositivo"));
+        colEmpleadoAsignado.setCellValueFactory(new PropertyValueFactory<>("empleadoAsignado"));
 
         tableDispositivos.setItems(listaDispositivos);
 
     } catch (Exception e) {
         e.printStackTrace();
-        mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudieron cargar los dispositivos.");
     }
 }
+
 
     @FXML
     private void InicioAction(ActionEvent event) {

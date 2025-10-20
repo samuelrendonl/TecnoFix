@@ -30,8 +30,8 @@ public class LoginController implements Initializable {
 
     @FXML
     private void ActionIniciar(ActionEvent event) {
-        String usuario = txtUsuario.getText();
-        String password = txtContraseña.getText();
+        String usuario = txtUsuario.getText().trim();
+        String password = txtContraseña.getText().trim();
 
         if (usuario.isEmpty() || password.isEmpty()) {
             mostrarAlerta(Alert.AlertType.WARNING, "Campos Vacíos", "Debe completar todos los campos.");
@@ -51,12 +51,14 @@ public class LoginController implements Initializable {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                String rol = rs.getString("rol");
-                if ("admin".equals(rol)) {
-                    Main.tipoUsuario = "admin";
+                // 🔹 Guardamos los datos del usuario
+                Main.nombreUsuario = rs.getString("usuario");
+                Main.tipoUsuario = rs.getString("rol");
+
+                // 🔹 Redirección según el rol
+                if ("admin".equals(Main.tipoUsuario)) {
                     Main.changeScene("InterfazAdministrador.fxml", "Panel Administrador");
-                } else {
-                    Main.tipoUsuario = "empleado";
+                } else if ("empleado".equals(Main.tipoUsuario)) {
                     Main.changeScene("InterfazEmpleado.fxml", "Panel Empleado");
                 }
                 return;
@@ -86,5 +88,3 @@ public class LoginController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {}
 }
-
- 

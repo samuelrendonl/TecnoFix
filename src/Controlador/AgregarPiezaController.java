@@ -24,7 +24,6 @@ import javafx.stage.FileChooser;
 
 public class AgregarPiezaController implements Initializable {
 
-    // ✅ Pieza que se va a editar (si existe)
     public static Pieza piezaAEditar = null;
 
     @FXML
@@ -198,7 +197,6 @@ public class AgregarPiezaController implements Initializable {
             "Cable USB o adaptador"
         );
 
-        // Si venimos desde el modo edición, llenar campos
         if (piezaAEditar != null) {
             txtNombre.setText(piezaAEditar.getNombre());
             txtPrecio.setText(String.valueOf(piezaAEditar.getPrecio()));

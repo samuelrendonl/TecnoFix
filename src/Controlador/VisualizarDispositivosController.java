@@ -59,43 +59,51 @@ public class VisualizarDispositivosController implements Initializable {
     
      ObservableList<Dispositivo> listaDispositivos = FXCollections.observableArrayList();
      
-    private void cargarDispositivos() {
-        String sql = "SELECT * FROM dispositivos";
+   private void cargarDispositivos() {
+    String sql = """
+        SELECT d.id_dispositivo,
+               d.NombreCliente,
+               d.NombreDispositivo,
+               d.MarcaDispositivo,
+               d.DañoDispositivo,
+               COALESCE(e.nombre, 'Sin asignar') AS EmpleadoAsignado
+        FROM dispositivos d
+        LEFT JOIN reparaciones r ON d.id_dispositivo = r.id_dispositivo
+        LEFT JOIN empleados e ON r.id_empleado = e.id_empleado;
+    """;
 
-        try (Connection conn = ConexionBD.conectar();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+    try (Connection conn = ConexionBD.conectar();
+         PreparedStatement ps = conn.prepareStatement(sql);
+         ResultSet rs = ps.executeQuery()) {
 
-            listaDispositivos.clear();
+        listaDispositivos.clear();
 
-            while (rs.next()) {
-                Dispositivo disp = new Dispositivo(
-             rs.getInt("id_dispositivo"),
+        while (rs.next()) {
+            Dispositivo disp = new Dispositivo(
+                rs.getInt("id_dispositivo"),
                 rs.getString("NombreCliente"),
                 rs.getString("NombreDispositivo"),
                 rs.getString("MarcaDispositivo"),
                 rs.getString("DañoDispositivo"),
                 rs.getString("EmpleadoAsignado")
-    );
-    listaDispositivos.add(disp);
-
-            }
-
-            
-            colId.setCellValueFactory(new PropertyValueFactory<>("idDispositivo"));
-            colNombreCliente.setCellValueFactory(new PropertyValueFactory<>("NombreCliente"));
-            colNombreDispositivo.setCellValueFactory(new PropertyValueFactory<>("NombreDispositivo"));
-            colMarcaDispositivo.setCellValueFactory(new PropertyValueFactory<>("MarcaDispositivo"));
-            colDañoDispositivo.setCellValueFactory(new PropertyValueFactory<>("DañoDispositivo"));
-            colEmpleadoAsignado.setCellValueFactory(new PropertyValueFactory<>("EmpleadoAsignado"));
-            
-
-            tableDispositivos.setItems(listaDispositivos);
-
-        } catch (Exception e) {
-            e.printStackTrace();
+            );
+            listaDispositivos.add(disp);
         }
+
+        colId.setCellValueFactory(new PropertyValueFactory<>("idDispositivo"));
+        colNombreCliente.setCellValueFactory(new PropertyValueFactory<>("nombreCliente"));
+        colNombreDispositivo.setCellValueFactory(new PropertyValueFactory<>("nombreDispositivo"));
+        colMarcaDispositivo.setCellValueFactory(new PropertyValueFactory<>("marcaDispositivo"));
+        colDañoDispositivo.setCellValueFactory(new PropertyValueFactory<>("dañoDispositivo"));
+        colEmpleadoAsignado.setCellValueFactory(new PropertyValueFactory<>("empleadoAsignado"));
+
+        tableDispositivos.setItems(listaDispositivos);
+
+    } catch (Exception e) {
+        e.printStackTrace();
     }
+}
+
     
    @Override
 public void initialize(URL url, ResourceBundle rb) {
@@ -116,7 +124,10 @@ public void initialize(URL url, ResourceBundle rb) {
 
         @FXML
     private void volverAction(ActionEvent event){
-      Main.changeScene("Dispositivos.fxml", "Dispositivos");  
+        if ("admin".equals(Main.tipoUsuario)) {
+    Main.changeScene("Dispositivos.fxml", "Dispositivos");
+}else if("empleado".equals(Main.tipoUsuario))
+     Main.changeScene("InterfazEmpleado.fxml", "Panel Empleado");  
     }
 
 

@@ -16,39 +16,35 @@ import javafx.scene.control.Button;
  *
  * @author Mi PC
  */
-public class GestionDePiezasController implements Initializable {
+public class EstatdisticasController implements Initializable {
 
+   @FXML
+   private Button btnInicio, btnESTReparaciones, btnESTEmpleadosAction, btnESTPiezas;
+   
+   
+   @FXML
+   private void ESTPiezasAction(ActionEvent event){
+    Main.changeScene("EstPiezas.fxml", "Estadisticas de Piezas");
+  
+   }
+   
+   @FXML
+   private void ESTEmpleadosAction(ActionEvent event){
+    Main.changeScene("EstEmpleados.fxml", "Estadisticas de Empleados");
+   }
+   
+  @FXML
+  private void ESTReparacionesAction(ActionEvent event){
+   Main.changeScene("EstadisticasReparaciones.fxml", "Estadisticas de Reparaciones");
 
+  }
         @FXML
-    private Button btnInicio;
-     @FXML
     private void InicioAction(ActionEvent event) {
         Main.changeScene("InterfazAdministrador.fxml", "Panel Administrador");
     }
+
     
-        @FXML
-    private Button AñadirPieza;
-     @FXML
-    private void AñadirPiezaAction(ActionEvent event) {
-        Main.changeScene("AgregarPieza.fxml", "Añadir Pieza");
-    }
-    
-    @FXML
-    private Button EliminarPieza;
-     @FXML
-    private void EliminarPiezaAction(ActionEvent event) {
-        Main.changeScene("EliminarPieza.fxml", "Eliminar Pieza");
-    }
-    @FXML
-    private Button EditarPieza;
-     @FXML
-    private void EditarPiezaAction(ActionEvent event) {
-        Main.changeScene("EditarPieza.fxml", "Editar Pieza");
-    }
-    
-    
-    
-    
+   
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO

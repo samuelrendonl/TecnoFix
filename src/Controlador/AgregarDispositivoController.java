@@ -39,14 +39,13 @@ public class AgregarDispositivoController implements Initializable {
     private Button btnInicio;
 
     private File imagenSeleccionada;
-    private Integer idDispositivoEdicion = null; // si no es null, estamos editando
+    private Integer idDispositivoEdicion = null;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         cargarEmpleados();
     }
 
-    // Permitir que otra escena pase un dispositivo para editarlo
     public void setDispositivoParaEditar(Dispositivo disp) {
         if (disp != null) {
             idDispositivoEdicion = disp.getIdDispositivo();
@@ -56,7 +55,6 @@ public class AgregarDispositivoController implements Initializable {
             txtDaño.setText(disp.getDañoDispositivo());
             comboBoxEmpleado.setValue(disp.getEmpleadoAsignado());
 
-            // Cargar foto desde base de datos (opcional)
             try (Connection conn = ConexionBD.conectar();
                  PreparedStatement ps = conn.prepareStatement("SELECT FotoDispositivo FROM dispositivos WHERE id_dispositivo = ?")) {
                 ps.setInt(1, idDispositivoEdicion);
@@ -68,7 +66,6 @@ public class AgregarDispositivoController implements Initializable {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
         }
     }
 
@@ -79,7 +76,7 @@ public class AgregarDispositivoController implements Initializable {
 
     private void cargarEmpleados() {
         List<String> empleados = new ArrayList<>();
-        String sql = "SELECT nombre FROM usuarios WHERE rol = 'empleado'";
+        String sql = "SELECT nombre FROM empleados WHERE rol = 'empleado'";
 
         try (Connection conn = ConexionBD.conectar();
              PreparedStatement ps = conn.prepareStatement(sql);
@@ -131,34 +128,33 @@ public class AgregarDispositivoController implements Initializable {
 
         try (Connection conn = ConexionBD.conectar()) {
 
-            // obtener id del empleado
-            String sqlEmpleado = "SELECT id_usuario FROM usuarios WHERE nombre = ?";
+            // 🔹 Obtener ID del empleado
+            String sqlEmpleado = "SELECT id_empleado FROM empleados WHERE nombre = ?";
             PreparedStatement psEmpleado = conn.prepareStatement(sqlEmpleado);
             psEmpleado.setString(1, empleadoSeleccionado);
             ResultSet rsEmpleado = psEmpleado.executeQuery();
             int idEmpleado = 0;
             if (rsEmpleado.next()) {
-                idEmpleado = rsEmpleado.getInt("id_usuario");
+                idEmpleado = rsEmpleado.getInt("id_empleado");
             }
 
             if (idDispositivoEdicion == null) {
                 // INSERTAR nuevo dispositivo
                 String sqlDispositivo = "INSERT INTO dispositivos (NombreCliente, NombreDispositivo, MarcaDispositivo, DañoDispositivo, EmpleadoAsignado, FotoDispositivo) VALUES (?, ?, ?, ?, ?, ?)";
-PreparedStatement psDispositivo = conn.prepareStatement(sqlDispositivo, Statement.RETURN_GENERATED_KEYS);
+                PreparedStatement psDispositivo = conn.prepareStatement(sqlDispositivo, Statement.RETURN_GENERATED_KEYS);
 
-psDispositivo.setString(1, cliente);
-psDispositivo.setString(2, nombreDispositivo);
-psDispositivo.setString(3, marca);
-psDispositivo.setString(4, daño);
-psDispositivo.setString(5, empleadoSeleccionado);
+                psDispositivo.setString(1, cliente);
+                psDispositivo.setString(2, nombreDispositivo);
+                psDispositivo.setString(3, marca);
+                psDispositivo.setString(4, daño);
+                psDispositivo.setString(5, empleadoSeleccionado);
 
-if (imagenSeleccionada != null) {
-    FileInputStream fis = new FileInputStream(imagenSeleccionada);
-    psDispositivo.setBinaryStream(6, fis, (int) imagenSeleccionada.length());
-} else {
-    psDispositivo.setNull(6, java.sql.Types.BLOB);
-}
-
+                if (imagenSeleccionada != null) {
+                    FileInputStream fis = new FileInputStream(imagenSeleccionada);
+                    psDispositivo.setBinaryStream(6, fis, (int) imagenSeleccionada.length());
+                } else {
+                    psDispositivo.setNull(6, java.sql.Types.BLOB);
+                }
 
                 psDispositivo.executeUpdate();
 
@@ -168,6 +164,7 @@ if (imagenSeleccionada != null) {
                     idDispositivo = rsDispositivo.getInt(1);
                 }
 
+                // INSERTAR reparación
                 String sqlReparacion = "INSERT INTO reparaciones (fecha_recepcion, descripcion_problema, estado, costo, id_dispositivo, id_empleado) VALUES (?, ?, ?, ?, ?, ?)";
                 PreparedStatement psReparacion = conn.prepareStatement(sqlReparacion);
                 psReparacion.setDate(1, java.sql.Date.valueOf(LocalDate.now()));
@@ -178,10 +175,16 @@ if (imagenSeleccionada != null) {
                 psReparacion.setInt(6, idEmpleado);
                 psReparacion.executeUpdate();
 
+                // 🔹 SUMAR 1 al campo Asignaciones del empleado
+                String sqlSumar = "UPDATE empleados SET Asignaciones = COALESCE(Asignaciones, 0) + 1 WHERE id_empleado = ?";
+                PreparedStatement psSumar = conn.prepareStatement(sqlSumar);
+                psSumar.setInt(1, idEmpleado);
+                psSumar.executeUpdate();
+
                 mostrarAlerta(Alert.AlertType.INFORMATION, "Reparación asignada", "El dispositivo fue registrado correctamente.");
 
             } else {
-                // EDITAR dispositivo existente
+                // ACTUALIZAR dispositivo existente
                 String sqlUpdate = "UPDATE dispositivos SET NombreCliente=?, NombreDispositivo=?, MarcaDispositivo=?, DañoDispositivo=?, FotoDispositivo=? WHERE id_dispositivo=?";
                 PreparedStatement psUpdate = conn.prepareStatement(sqlUpdate);
                 psUpdate.setString(1, cliente);
@@ -199,13 +202,82 @@ if (imagenSeleccionada != null) {
                 psUpdate.setInt(6, idDispositivoEdicion);
                 psUpdate.executeUpdate();
 
-                // actualizar reparación
+                // Verificar empleado anterior
+                String sqlEmpleadoAnterior = "SELECT id_empleado FROM reparaciones WHERE id_dispositivo = ?";
+                PreparedStatement psAnterior = conn.prepareStatement(sqlEmpleadoAnterior);
+                psAnterior.setInt(1, idDispositivoEdicion);
+                ResultSet rsAnterior = psAnterior.executeQuery();
+
+                int idEmpleadoAnterior = 0;
+                if (rsAnterior.next()) {
+                    idEmpleadoAnterior = rsAnterior.getInt("id_empleado");
+                }
+
+                // Actualizar reparación
                 String sqlUpdateRep = "UPDATE reparaciones SET descripcion_problema=?, id_empleado=? WHERE id_dispositivo=?";
                 PreparedStatement psUpdateRep = conn.prepareStatement(sqlUpdateRep);
                 psUpdateRep.setString(1, daño);
                 psUpdateRep.setInt(2, idEmpleado);
                 psUpdateRep.setInt(3, idDispositivoEdicion);
                 psUpdateRep.executeUpdate();
+                
+                
+// 🔹 AJUSTAR ASIGNACIONES SI CAMBIÓ EL EMPLEADO (bloque robusto con debug)
+if (idEmpleadoAnterior != idEmpleado && idEmpleadoAnterior != 0) {
+    try {
+        // 1) Leer valor actual de Asignaciones del empleado anterior
+        String sqlGetAnterior = "SELECT COALESCE(Asignaciones, 0) AS asignaciones_actual FROM empleados WHERE id_empleado = ?";
+        PreparedStatement psGetAnterior = conn.prepareStatement(sqlGetAnterior);
+        psGetAnterior.setInt(1, idEmpleadoAnterior);
+        ResultSet rsGetAnterior = psGetAnterior.executeQuery();
+
+        int asignacionesPrev = 0;
+        if (rsGetAnterior.next()) {
+            asignacionesPrev = rsGetAnterior.getInt("asignaciones_actual");
+        }
+
+        System.out.println("DEBUG: idEmpleadoAnterior=" + idEmpleadoAnterior + " AsignacionesAntes=" + asignacionesPrev);
+
+        // 2) Calcular nuevo valor (evitar negativos)
+        int nuevoValorPrev = asignacionesPrev - 1;
+        if (nuevoValorPrev < 0) nuevoValorPrev = 0;
+
+        // 3) Actualizar con el nuevo valor concreto
+        String sqlUpdatePrev = "UPDATE empleados SET Asignaciones = ? WHERE id_empleado = ?";
+        PreparedStatement psUpdatePrev = conn.prepareStatement(sqlUpdatePrev);
+        psUpdatePrev.setInt(1, nuevoValorPrev);
+        psUpdatePrev.setInt(2, idEmpleadoAnterior);
+        int filasPrev = psUpdatePrev.executeUpdate();
+        System.out.println("DEBUG: Update anterior filas afectadas=" + filasPrev + " NuevoValor=" + nuevoValorPrev);
+
+        // 4) Leer valor actual del nuevo empleado (por seguridad)
+        String sqlGetNuevo = "SELECT COALESCE(Asignaciones, 0) AS asignaciones_actual FROM empleados WHERE id_empleado = ?";
+        PreparedStatement psGetNuevo = conn.prepareStatement(sqlGetNuevo);
+        psGetNuevo.setInt(1, idEmpleado);
+        ResultSet rsGetNuevo = psGetNuevo.executeQuery();
+
+        int asignacionesNuevo = 0;
+        if (rsGetNuevo.next()) {
+            asignacionesNuevo = rsGetNuevo.getInt("asignaciones_actual");
+        }
+
+        System.out.println("DEBUG: idEmpleadoNuevo=" + idEmpleado + " AsignacionesAntes=" + asignacionesNuevo);
+
+        // 5) Sumar 1 al nuevo empleado (evitar NULL con COALESCE al select ya hecho)
+        int nuevoValorNuevo = asignacionesNuevo + 1;
+        String sqlUpdateNuevo = "UPDATE empleados SET Asignaciones = ? WHERE id_empleado = ?";
+        PreparedStatement psUpdateNuevo = conn.prepareStatement(sqlUpdateNuevo);
+        psUpdateNuevo.setInt(1, nuevoValorNuevo);
+        psUpdateNuevo.setInt(2, idEmpleado);
+        int filasNuevo = psUpdateNuevo.executeUpdate();
+        System.out.println("DEBUG: Update nuevo filas afectadas=" + filasNuevo + " NuevoValor=" + nuevoValorNuevo);
+
+    } catch (SQLException ex) {
+        ex.printStackTrace();
+    }
+}
+
+
 
                 mostrarAlerta(Alert.AlertType.INFORMATION, "Actualizado", "Los cambios se guardaron correctamente.");
             }

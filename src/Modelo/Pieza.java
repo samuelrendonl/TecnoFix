@@ -4,11 +4,12 @@ public class Pieza {
     private int id;
     private String nombre;
     private String tipo;
-    private int precio;
+    private double precio;
     private int cantidad;
     private byte[] imagen;
+    private int usadas; // cantidad usada en reparaciones
 
-    public Pieza(int id, String nombre, String tipo, int precio, int cantidad, byte[] imagen) {
+    public Pieza(int id, String nombre, String tipo, double precio, int cantidad, byte[] imagen) {
         this.id = id;
         this.nombre = nombre;
         this.tipo = tipo;
@@ -17,7 +18,7 @@ public class Pieza {
         this.imagen = imagen;
     }
 
-    public Pieza(String nombre, String tipo, int precio, int cantidad, byte[] imagen) {
+    public Pieza(String nombre, String tipo, double precio, int cantidad, byte[] imagen) {
         this.nombre = nombre;
         this.tipo = tipo;
         this.precio = precio;
@@ -25,18 +26,35 @@ public class Pieza {
         this.imagen = imagen;
     }
 
-    // Getters y setters
-    public int getId() { return id; }
-    public String getNombre() { return nombre; }
-    public String getTipo() { return tipo; }
-    public int getPrecio() { return precio; }
-    public int getCantidad() { return cantidad; }
-    public byte[] getImagen() { return imagen; }
+    public Pieza(int id, String nombre, String tipo, double precio, int cantidad) {
+        this.id = id;
+        this.nombre = nombre;
+        this.tipo = tipo;
+        this.precio = precio;
+        this.cantidad = cantidad;
+    }
 
+    public Pieza() {}
+
+    // ======== GETTERS Y SETTERS ========
+    public int getId() { return id; }
     public void setId(int id) { this.id = id; }
+
+    public String getNombre() { return nombre; }
     public void setNombre(String nombre) { this.nombre = nombre; }
+
+    public String getTipo() { return tipo; }
     public void setTipo(String tipo) { this.tipo = tipo; }
-    public void setPrecio(int precio) { this.precio = precio; }
+
+    public double getPrecio() { return precio; }
+    public void setPrecio(double precio) { this.precio = precio; }
+
+    public int getCantidad() { return cantidad; }
     public void setCantidad(int cantidad) { this.cantidad = cantidad; }
+
+    public byte[] getImagen() { return imagen; }
     public void setImagen(byte[] imagen) { this.imagen = imagen; }
+
+    public int getUsadas() { return usadas; }
+    public void setUsadas(int usadas) { this.usadas = usadas; }
 }

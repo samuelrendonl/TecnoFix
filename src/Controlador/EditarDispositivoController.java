@@ -38,47 +38,51 @@ public class EditarDispositivoController implements Initializable {
         cargarDispositivos();
     }
 
-    private void cargarDispositivos() {
-        String sql = """
-            SELECT d.id_dispositivo, d.NombreCliente, d.NombreDispositivo,
-                   d.MarcaDispositivo, d.DañoDispositivo,
-                   u.nombre AS EmpleadoAsignado
-            FROM dispositivos d
-            LEFT JOIN reparaciones r ON d.id_dispositivo = r.id_dispositivo
-            LEFT JOIN usuarios u ON r.id_empleado = u.id_usuario;
-        """;
+private void cargarDispositivos() {
+    String sql = """
+        SELECT d.id_dispositivo,
+               d.NombreCliente,
+               d.NombreDispositivo,
+               d.MarcaDispositivo,
+               d.DañoDispositivo,
+               e.nombre AS EmpleadoAsignado
+        FROM dispositivos d
+        LEFT JOIN reparaciones r ON d.id_dispositivo = r.id_dispositivo
+        LEFT JOIN empleados e ON r.id_empleado = e.id_empleado;
+    """;
 
-        try (Connection conn = ConexionBD.conectar();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+    try (Connection conn = ConexionBD.conectar();
+         PreparedStatement ps = conn.prepareStatement(sql);
+         ResultSet rs = ps.executeQuery()) {
 
-            listaDispositivos.clear();
+        listaDispositivos.clear();
 
-            while (rs.next()) {
-                listaDispositivos.add(new Dispositivo(
-                        rs.getInt("id_dispositivo"),
-                        rs.getString("NombreCliente"),
-                        rs.getString("NombreDispositivo"),
-                        rs.getString("MarcaDispositivo"),
-                        rs.getString("DañoDispositivo"),
-                        rs.getString("EmpleadoAsignado")
-                ));
-            }
-
-            colId.setCellValueFactory(new PropertyValueFactory<>("idDispositivo"));
-            colNombreCliente.setCellValueFactory(new PropertyValueFactory<>("nombreCliente"));
-            colNombreDispositivo.setCellValueFactory(new PropertyValueFactory<>("nombreDispositivo"));
-            colMarcaDispositivo.setCellValueFactory(new PropertyValueFactory<>("marcaDispositivo"));
-            colDañoDispositivo.setCellValueFactory(new PropertyValueFactory<>("dañoDispositivo"));
-            colEmpleadoAsignado.setCellValueFactory(new PropertyValueFactory<>("empleadoAsignado"));
-
-            tableDispositivos.setItems(listaDispositivos);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            new Alert(Alert.AlertType.ERROR, "Error al cargar dispositivos: " + e.getMessage()).showAndWait();
+        while (rs.next()) {
+            listaDispositivos.add(new Dispositivo(
+                    rs.getInt("id_dispositivo"),
+                    rs.getString("NombreCliente"),
+                    rs.getString("NombreDispositivo"),
+                    rs.getString("MarcaDispositivo"),
+                    rs.getString("DañoDispositivo"),
+                    rs.getString("EmpleadoAsignado")
+            ));
         }
+
+        colId.setCellValueFactory(new PropertyValueFactory<>("idDispositivo"));
+        colNombreCliente.setCellValueFactory(new PropertyValueFactory<>("nombreCliente"));
+        colNombreDispositivo.setCellValueFactory(new PropertyValueFactory<>("nombreDispositivo"));
+        colMarcaDispositivo.setCellValueFactory(new PropertyValueFactory<>("marcaDispositivo"));
+        colDañoDispositivo.setCellValueFactory(new PropertyValueFactory<>("dañoDispositivo"));
+        colEmpleadoAsignado.setCellValueFactory(new PropertyValueFactory<>("empleadoAsignado"));
+
+        tableDispositivos.setItems(listaDispositivos);
+
+    } catch (Exception e) {
+        e.printStackTrace();
+        new Alert(Alert.AlertType.ERROR, "Error al cargar dispositivos: " + e.getMessage()).showAndWait();
     }
+}
+
 
     @FXML
     private void InicioAction(ActionEvent event) {

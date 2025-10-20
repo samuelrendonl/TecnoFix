@@ -89,10 +89,8 @@ public class EditarPiezaController implements Initializable {
             return;
         }
 
-        // Guardamos la pieza seleccionada en una variable estática temporal
         AgregarPiezaController.piezaAEditar = piezaSeleccionada;
 
-        // Cambiamos de escena al formulario de agregar pieza
         Main.changeScene("AgregarPieza.fxml", "Editar Pieza");
     }
 
