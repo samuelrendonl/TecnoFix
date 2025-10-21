@@ -35,7 +35,7 @@ public class EstatdisticasController implements Initializable {
    
   @FXML
   private void ESTReparacionesAction(ActionEvent event){
-   Main.changeScene("EstadisticasReparaciones.fxml", "Estadisticas de Reparaciones");
+   Main.changeScene("EstReparaciones.fxml", "Estadisticas de Reparaciones");
 
   }
         @FXML

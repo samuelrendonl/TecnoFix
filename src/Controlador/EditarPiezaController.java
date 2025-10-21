@@ -1,9 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
- */
 package Controlador;
-
 
 import Modelo.ConexionBD;
 import Modelo.Pieza;
@@ -17,43 +12,43 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.Alert.AlertType;
 
-/**
- * FXML Controller class
- *
- * @author Mi PC
- */
 public class EditarPiezaController implements Initializable {
 
     @FXML
     private Button btnInicio, btnvolver, btnEditarPieza;
-    
-            @FXML
-    private void volverAction(ActionEvent event){
-      Main.changeScene("GestionDePiezas.fxml", "Gestor De Piezas");   
-    }
-        @FXML
-    private void InicioAction(ActionEvent event) {
-        Main.changeScene("InterfazAdministrador.fxml", "Panel Administrador");
-    }
 
+    @FXML
+    private TableView<Pieza> tablaPiezas;
+    @FXML
+    private TableColumn<Pieza, Integer> colId;
+    @FXML
+    private TableColumn<Pieza, String> colNombre;
+    @FXML
+    private TableColumn<Pieza, String> colTipo;
+    @FXML
+    private TableColumn<Pieza, Integer> colPrecio;
+    @FXML
+    private TableColumn<Pieza, Integer> colStock;
+    @FXML
+    private TableColumn<Pieza, String> colProveedor;
+    @FXML
+    private TableColumn<Pieza, String> colMarca;
 
-    @FXML private TableView<Pieza> tablaPiezas;
-    @FXML private TableColumn<Pieza, Integer> colId;
-    @FXML private TableColumn<Pieza, String> colNombre;
-    @FXML private TableColumn<Pieza, String> colTipo;
-    @FXML private TableColumn<Pieza, Integer> colPrecio;
-    @FXML private TableColumn<Pieza, Integer> colStock;
-    @FXML private Button btnEditar, btnVolver;
+    @FXML
+    private Button btnEditar, btnVolver;
 
     private ObservableList<Pieza> listaPiezas = FXCollections.observableArrayList();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        // Asocia las columnas con los atributos del modelo Pieza
         colId.setCellValueFactory(new PropertyValueFactory<>("id"));
         colNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
         colTipo.setCellValueFactory(new PropertyValueFactory<>("tipo"));
         colPrecio.setCellValueFactory(new PropertyValueFactory<>("precio"));
         colStock.setCellValueFactory(new PropertyValueFactory<>("cantidad"));
+        colProveedor.setCellValueFactory(new PropertyValueFactory<>("proveedor"));
+        colMarca.setCellValueFactory(new PropertyValueFactory<>("marca"));
 
         cargarPiezas();
     }
@@ -71,6 +66,8 @@ public class EditarPiezaController implements Initializable {
                         rs.getString("tipo"),
                         rs.getInt("precio"),
                         rs.getInt("cantidad"),
+                        rs.getString("proveedor"),
+                        rs.getString("marca"),
                         rs.getBytes("imagen")
                 ));
             }
@@ -90,10 +87,18 @@ public class EditarPiezaController implements Initializable {
         }
 
         AgregarPiezaController.piezaAEditar = piezaSeleccionada;
-
         Main.changeScene("AgregarPieza.fxml", "Editar Pieza");
     }
 
+    @FXML
+    private void volverAction(ActionEvent event) {
+        Main.changeScene("GestionDePiezas.fxml", "Gestor De Piezas");
+    }
+
+    @FXML
+    private void InicioAction(ActionEvent event) {
+        Main.changeScene("InterfazAdministrador.fxml", "Panel Administrador");
+    }
 
     private void mostrarAlerta(String titulo, String mensaje, AlertType tipo) {
         Alert alert = new Alert(tipo);
@@ -103,4 +108,3 @@ public class EditarPiezaController implements Initializable {
         alert.showAndWait();
     }
 }
-

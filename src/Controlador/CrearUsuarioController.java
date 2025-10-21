@@ -61,7 +61,6 @@ public class CrearUsuarioController implements Initializable {
         
               try (Connection conn = ConexionBD.conectar()) {
 
-            // Desactivamos autocommit para manejar ambas inserciones como una sola transacción
             conn.setAutoCommit(false);
 
             try (PreparedStatement psUsuario = conn.prepareStatement(sqlUsuarios);
@@ -71,14 +70,14 @@ public class CrearUsuarioController implements Initializable {
                 psUsuario.setString(1, nombre);
                 psUsuario.setString(2, usuario);
                 psUsuario.setString(3, password_hash);
-                psUsuario.setString(4, "empleado");
+                psUsuario.setString(4, "Admin");
                 psUsuario.executeUpdate();
 
                 // Inserción en empleados
                 psAdmin.setString(1, nombre);
                 psAdmin.setString(2, usuario);
                 psAdmin.setString(3, password_hash);
-                psAdmin.setString(4, "empleado");
+                psAdmin.setString(4, "Admin");
              conn.commit();
 
     

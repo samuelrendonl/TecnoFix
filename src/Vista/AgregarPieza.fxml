@@ -29,12 +29,12 @@
             <Font size="22.0" />
          </font>
          <GridPane.margin>
-            <Insets bottom="190.0" left="70.0" />
+            <Insets bottom="373.0" left="195.0" />
          </GridPane.margin>
       </TextField>
       <ComboBox fx:id="comboTipo" prefHeight="72.0" prefWidth="463.0" style="-fx-background-color: d9d9d9;" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
          <GridPane.margin>
-            <Insets left="70.0" top="15.0" />
+            <Insets bottom="205.0" left="195.0" />
          </GridPane.margin>
       </ComboBox>
       <TextField fx:id="txtPrecio" maxHeight="72.0" maxWidth="463.0" prefHeight="72.0" prefWidth="463.0" style="-fx-background-color: D9D9D9;" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
@@ -42,7 +42,7 @@
             <Font size="22.0" />
          </font>
          <GridPane.margin>
-            <Insets left="70.0" top="223.0" />
+            <Insets bottom="32.0" left="195.0" />
          </GridPane.margin>
       </TextField>
       <TextField fx:id="txtCantidad" maxHeight="72.0" maxWidth="463.0" prefHeight="72.0" prefWidth="463.0" style="-fx-background-color: D9D9D9;" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
@@ -50,7 +50,7 @@
             <Font size="22.0" />
          </font>
          <GridPane.margin>
-            <Insets left="70.0" top="431.0" />
+            <Insets left="195.0" top="310.0" />
          </GridPane.margin>
       </TextField>
       <Button fx:id="btnAggImagen" maxHeight="75.0" maxWidth="231.0" minHeight="75.0" minWidth="231.0" mnemonicParsing="false" onAction="#AggImagenAction" prefHeight="75.0" prefWidth="231.0" style="-fx-cursor: hand;" styleClass="btn-transparente" stylesheets="@styles.css" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
@@ -75,8 +75,24 @@
       </Button>
       <ImageView fx:id="imagePreview" fitHeight="249.0" fitWidth="233.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
          <GridPane.margin>
-            <Insets left="877.0" top="150.0" />
+            <Insets left="938.0" top="300.0" />
          </GridPane.margin>
       </ImageView>
+      <TextField fx:id="txtMarca" maxHeight="72.0" maxWidth="463.0" prefHeight="72.0" prefWidth="463.0" style="-fx-background-color: D9D9D9;" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+         <font>
+            <Font size="22.0" />
+         </font>
+         <GridPane.margin>
+            <Insets left="195.0" top="140.0" />
+         </GridPane.margin>
+      </TextField>
+      <TextField fx:id="txtProveedor" maxHeight="72.0" maxWidth="463.0" prefHeight="72.0" prefWidth="463.0" style="-fx-background-color: D9D9D9;" GridPane.halignment="CENTER">
+         <font>
+            <Font size="22.0" />
+         </font>
+         <GridPane.margin>
+            <Insets left="195.0" top="480.0" />
+         </GridPane.margin>
+      </TextField>
    </children>
 </GridPane>

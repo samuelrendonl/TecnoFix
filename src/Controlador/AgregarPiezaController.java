@@ -30,7 +30,7 @@ public class AgregarPiezaController implements Initializable {
     private Button btnInicio, btnvolver, btnAggPieza, btnAggImagen;
 
     @FXML
-    private TextField txtNombre, txtPrecio, txtCantidad;
+    private TextField txtNombre, txtPrecio, txtCantidad, txtProveedor, txtMarca;
 
     @FXML
     private ComboBox<String> comboTipo;
@@ -44,7 +44,7 @@ public class AgregarPiezaController implements Initializable {
     @FXML
     private void volverAction(ActionEvent event) {
         Main.changeScene("GestionDePiezas.fxml", "Gestor De Piezas");
-        piezaAEditar = null; // Limpiar referencia al volver
+        piezaAEditar = null;
     }
 
     @FXML
@@ -58,7 +58,7 @@ public class AgregarPiezaController implements Initializable {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Seleccionar Imagen");
         fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Archivos de imagen", "*.jpg", "*.png", "*.jpeg")
+            new FileChooser.ExtensionFilter("Archivos de imagen", "*.jpg", "*.png", "*.jpeg")
         );
 
         File file = fileChooser.showOpenDialog(null);
@@ -80,8 +80,11 @@ public class AgregarPiezaController implements Initializable {
         String tipo = comboTipo.getValue();
         String precioTexto = txtPrecio.getText().trim();
         String cantidadTexto = txtCantidad.getText().trim();
+        String proveedor = txtProveedor.getText().trim();
+        String marca = txtMarca.getText().trim();
 
-        if (nombre.isEmpty() || tipo == null || precioTexto.isEmpty() || cantidadTexto.isEmpty()) {
+        if (nombre.isEmpty() || tipo == null || precioTexto.isEmpty() || cantidadTexto.isEmpty()
+                || proveedor.isEmpty() || marca.isEmpty()) {
             mostrarAlerta("Error", "Todos los campos son obligatorios.");
             return;
         }
@@ -99,6 +102,11 @@ public class AgregarPiezaController implements Initializable {
         }
 
         try (Connection conn = ConexionBD.conectar()) {
+            if (conn == null) {
+                mostrarAlerta("Error", "No se pudo conectar con la base de datos.");
+                return;
+            }
+
             if (piezaAEditar == null) {
                 // 🔹 Modo AGREGAR
                 if (bytesImagen == null) {
@@ -106,56 +114,67 @@ public class AgregarPiezaController implements Initializable {
                     return;
                 }
 
-                String sql = "INSERT INTO pieza (nombre, tipo, precio, cantidad, imagen) VALUES (?, ?, ?, ?, ?)";
+                String sql = "INSERT INTO pieza (nombre, tipo, precio, cantidad, proveedor, marca, imagen) VALUES (?, ?, ?, ?, ?, ?, ?)";
                 PreparedStatement ps = conn.prepareStatement(sql);
                 ps.setString(1, nombre);
                 ps.setString(2, tipo);
                 ps.setInt(3, precio);
                 ps.setInt(4, cantidad);
-                ps.setBytes(5, bytesImagen);
-                ps.executeUpdate();
+                ps.setString(5, proveedor);
+                ps.setString(6, marca);
+                ps.setBytes(7, bytesImagen);
 
-                mostrarAlerta("Éxito", "Pieza agregada correctamente.");
+                int filas = ps.executeUpdate(); // 🔹 aquí estaba el problema
+
+                if (filas > 0) {
+                    mostrarAlerta("Éxito", "Pieza agregada correctamente.");
+                    limpiarCampos();
+                } else {
+                    mostrarAlerta("Error", "No se insertó la pieza en la base de datos.");
+                }
+
             } else {
                 // 🔹 Modo EDITAR
                 String sql;
                 PreparedStatement ps;
 
                 if (bytesImagen != null) {
-                    // Si se seleccionó una nueva imagen, también se actualiza
-                    sql = "UPDATE pieza SET nombre=?, tipo=?, precio=?, cantidad=?, imagen=? WHERE id_pieza=?";
+                    sql = "UPDATE pieza SET nombre=?, tipo=?, precio=?, cantidad=?, proveedor=?, marca=?, imagen=? WHERE id_pieza=?";
                     ps = conn.prepareStatement(sql);
                     ps.setString(1, nombre);
                     ps.setString(2, tipo);
                     ps.setInt(3, precio);
                     ps.setInt(4, cantidad);
-                    ps.setBytes(5, bytesImagen);
-                    ps.setInt(6, piezaAEditar.getId());
+                    ps.setString(5, proveedor);
+                    ps.setString(6, marca);
+                    ps.setBytes(7, bytesImagen);
+                    ps.setInt(8, piezaAEditar.getId());
                 } else {
-                    // Si no se cambió la imagen, no se modifica ese campo
-                    sql = "UPDATE pieza SET nombre=?, tipo=?, precio=?, cantidad=? WHERE id_pieza=?";
+                    sql = "UPDATE pieza SET nombre=?, tipo=?, precio=?, cantidad=?, proveedor=?, marca=? WHERE id_pieza=?";
                     ps = conn.prepareStatement(sql);
                     ps.setString(1, nombre);
                     ps.setString(2, tipo);
                     ps.setInt(3, precio);
                     ps.setInt(4, cantidad);
-                    ps.setInt(5, piezaAEditar.getId());
+                    ps.setString(5, proveedor);
+                    ps.setString(6, marca);
+                    ps.setInt(7, piezaAEditar.getId());
                 }
 
                 int filas = ps.executeUpdate();
+
                 if (filas > 0) {
                     mostrarAlerta("Éxito", "Pieza actualizada correctamente.");
+                    piezaAEditar = null;
+                    limpiarCampos();
                 } else {
                     mostrarAlerta("Error", "No se pudo actualizar la pieza.");
                 }
-
-                piezaAEditar = null; // limpiar referencia después de editar
             }
 
-            limpiarCampos();
-
         } catch (SQLException e) {
-            mostrarAlerta("Error", "No se pudo guardar la pieza: " + e.getMessage());
+            mostrarAlerta("Error SQL", e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -164,6 +183,8 @@ public class AgregarPiezaController implements Initializable {
         txtPrecio.clear();
         txtCantidad.clear();
         comboTipo.getSelectionModel().clearSelection();
+        txtProveedor.clear();
+        txtMarca.clear();
         imagePreview.setImage(null);
         bytesImagen = null;
     }
@@ -178,7 +199,6 @@ public class AgregarPiezaController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
         comboTipo.getItems().addAll(
             "Pantalla",
             "Batería",
@@ -202,6 +222,8 @@ public class AgregarPiezaController implements Initializable {
             txtPrecio.setText(String.valueOf(piezaAEditar.getPrecio()));
             txtCantidad.setText(String.valueOf(piezaAEditar.getCantidad()));
             comboTipo.setValue(piezaAEditar.getTipo());
+            txtProveedor.setText(piezaAEditar.getProveedor());
+            txtMarca.setText(piezaAEditar.getMarca());
 
             if (piezaAEditar.getImagen() != null) {
                 Image img = new Image(new ByteArrayInputStream(piezaAEditar.getImagen()));
@@ -210,4 +232,3 @@ public class AgregarPiezaController implements Initializable {
         }
     }
 }
-

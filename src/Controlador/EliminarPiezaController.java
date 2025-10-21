@@ -20,12 +20,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 
-/**
- * FXML Controller class
- * Controlador para eliminar piezas desde la base de datos.
- * 
- * @author Samuel Rendón
- */
+
 public class EliminarPiezaController implements Initializable {
 
     @FXML
@@ -43,6 +38,10 @@ public class EliminarPiezaController implements Initializable {
     private TableColumn<Pieza, Double> colPrecio;
     @FXML
     private TableColumn<Pieza, Integer> colStock;
+    @FXML
+    private TableColumn<Pieza, String> colProveedor;
+    @FXML
+    private TableColumn<Pieza, String> colMarca;
 
     private ObservableList<Pieza> listaPiezas = FXCollections.observableArrayList();
 
@@ -93,14 +92,7 @@ public class EliminarPiezaController implements Initializable {
         }
     }
 
-    private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
-        Alert alerta = new Alert(tipo);
-        alerta.setTitle(titulo);
-        alerta.setHeaderText(null);
-        alerta.setContentText(mensaje);
-        alerta.showAndWait();
-    }
-
+    // 🔹 Cargar todas las piezas desde la base de datos
     private void cargarPiezas() {
         listaPiezas.clear();
         try (Connection conn = ConexionBD.conectar()) {
@@ -114,7 +106,9 @@ public class EliminarPiezaController implements Initializable {
                         rs.getString("nombre"),
                         rs.getString("tipo"),
                         rs.getInt("precio"),
-                        rs.getInt("Cantidad"),
+                        rs.getInt("cantidad"),
+                        rs.getString("proveedor"),
+                        rs.getString("marca"),
                         rs.getBytes("imagen")
                 ));
             }
@@ -133,8 +127,18 @@ public class EliminarPiezaController implements Initializable {
         colTipo.setCellValueFactory(new PropertyValueFactory<>("tipo"));
         colPrecio.setCellValueFactory(new PropertyValueFactory<>("precio"));
         colStock.setCellValueFactory(new PropertyValueFactory<>("cantidad"));
+        colProveedor.setCellValueFactory(new PropertyValueFactory<>("proveedor"));
+        colMarca.setCellValueFactory(new PropertyValueFactory<>("marca"));
 
         cargarPiezas();
     }
-}
 
+    // 🔹 Mostrar alertas
+    private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
+        Alert alerta = new Alert(tipo);
+        alerta.setTitle(titulo);
+        alerta.setHeaderText(null);
+        alerta.setContentText(mensaje);
+        alerta.showAndWait();
+    }
+}

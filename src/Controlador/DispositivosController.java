@@ -18,7 +18,7 @@ import javafx.scene.control.Button;
  */
 public class DispositivosController implements Initializable {
 
-@FXML
+    @FXML
     private Button btnInicio;
      @FXML
     private void InicioAction(ActionEvent event) {
@@ -26,14 +26,14 @@ public class DispositivosController implements Initializable {
     }
     
     
-@FXML
+    @FXML
     private Button VisualizarDispositivos;
      @FXML
     private void VisualizarDispositivosAction(ActionEvent event) {
         Main.changeScene("VisualizarDispositivos.fxml", "Visualizar Dispositivos");
     }    
     
- @FXML
+    @FXML
     private Button EliminarDispositivo;
      @FXML
     private void EliminarDispositivoAction(ActionEvent event) {
@@ -41,7 +41,7 @@ public class DispositivosController implements Initializable {
     }  
     
     
- @FXML
+    @FXML
     private Button EditarDispositivo;
      @FXML
     private void EditarDispositivoAction(ActionEvent event) {

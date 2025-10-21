@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="933.0" prefWidth="1440.0" style="-fx-background-color: ffffff;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/24.0.1" fx:controller="Controlador.EditarPiezaController">
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="933.0" prefWidth="1440.0" style="-fx-background-color: ffffff;" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controlador.EditarPiezaController">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
   </columnConstraints>
@@ -43,11 +43,13 @@
       </Button>
       <TableView fx:id="tablaPiezas" maxHeight="550.0" maxWidth="1312.0" minHeight="550.0" minWidth="1312.0" prefHeight="550.0" prefWidth="1312.0" style="-fx-background-color: ffffff;" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
         <columns>
-          <TableColumn fx:id="colId" prefWidth="110.0" text="ID" />
-          <TableColumn fx:id="colNombre" prefWidth="300.0" text="Nombre" />
-            <TableColumn fx:id="colTipo" prefWidth="300.0" text="Tipo" />
-            <TableColumn fx:id="colPrecio" prefWidth="300.0" text="Precio" />
-            <TableColumn fx:id="colStock" prefWidth="300.0" text="Stock Disponible" />
+          <TableColumn fx:id="colId" prefWidth="100.0" text="ID" />
+          <TableColumn fx:id="colNombre" prefWidth="250.0" text="Nombre" />
+            <TableColumn fx:id="colTipo" prefWidth="200.0" text="Tipo" />
+            <TableColumn fx:id="colPrecio" prefWidth="150.0" text="Precio" />
+            <TableColumn fx:id="colStock" prefWidth="150.0" text="Stock Disponible" />
+            <TableColumn fx:id="colProveedor" prefWidth="250.0" text="Proveedor" />
+            <TableColumn fx:id="colMarca" prefWidth="210.0" text="Marca" />
         </columns>
          <GridPane.margin>
             <Insets top="150.0" />
