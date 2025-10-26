@@ -25,7 +25,7 @@ public class InterfazEmpleadoController implements Initializable {
 
     @FXML
     private void ActionDispositivosAsignados(ActionEvent event) {
-
+    Main.changeScene("DispositivosAsignados.fxml", "Dispositivos Asignados");
     }
     
     

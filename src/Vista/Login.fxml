@@ -24,7 +24,7 @@
             <Image url="@../Imagenes/Login_1.png" />
          </image>
       </ImageView>
-      <TextField fx:id="txtUsuario" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="50.0" prefWidth="411.0" promptText="Usuario" style="-fx-background-color: #D1D1D1; -fx-background-radius: 50;" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+      <TextField fx:id="txtUsuario" maxHeight="-Infinity" maxWidth="-Infinity" onAction="#ActionIniciar" prefHeight="50.0" prefWidth="411.0" promptText="Usuario" style="-fx-background-color: #D1D1D1; -fx-background-radius: 50;" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
          <GridPane.margin>
             <Insets left="115.0" />
          </GridPane.margin>
@@ -35,7 +35,7 @@
             <Insets />
          </opaqueInsets>
       </TextField>
-      <PasswordField fx:id="txtContraseña" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="50.0" prefWidth="400.0" promptText="Contraseña" style="-fx-background-color: #D1D1D1; -fx-background-radius: 50;" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+      <PasswordField fx:id="txtContraseña" maxHeight="-Infinity" maxWidth="-Infinity" onAction="#ActionIniciar" prefHeight="50.0" prefWidth="400.0" promptText="Contraseña" style="-fx-background-color: #D1D1D1; -fx-background-radius: 50;" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
          <GridPane.margin>
             <Insets left="115.0" top="184.0" />
          </GridPane.margin>

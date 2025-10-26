@@ -54,6 +54,8 @@ public class LoginController implements Initializable {
                 // 🔹 Guardamos los datos del usuario
                 Main.nombreUsuario = rs.getString("usuario");
                 Main.tipoUsuario = rs.getString("rol");
+                Main.nombreEmpleado = rs.getString("nombre");
+
 
                 // 🔹 Redirección según el rol
                 if ("admin".equals(Main.tipoUsuario)) {

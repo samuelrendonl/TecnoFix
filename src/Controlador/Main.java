@@ -1,6 +1,7 @@
 package Controlador;
 
 import Modelo.ConexionBD;
+import Modelo.Dispositivo;
 import java.io.IOException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -9,9 +10,10 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import java.sql.Connection;
 
-public class Main extends Application {
-
+    public class Main extends Application {
+    public static Dispositivo reparacionSeleccionada;
     public static String nombreUsuario; 
+    public static String nombreEmpleado;
     public static String tipoUsuario;   
     public static Stage primaryStage;
 
